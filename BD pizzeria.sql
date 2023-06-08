@@ -10,5 +10,8 @@ PNC nvarchar(30) not null,
 SNC nvarchar(30),
 PAC nvarchar(30) not null,
 SAC nvarchar(30),
+foreign key (Num_pedido) references Pedidos(Num_pedido),
+foreign key (Id_pedido) references Pedidos(Id_pedido)
+),
  
  /*que mas podemos agregar?*/
