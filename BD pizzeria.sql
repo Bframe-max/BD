@@ -9,3 +9,4 @@ PNC nvarchar(30) not null,
 SNC nvarchar(30),
 PAC nvarchar(30) not null,
 SAC nvarchar(30),
+ /*que mas podemos agregar?*/
