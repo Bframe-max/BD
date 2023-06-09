@@ -34,6 +34,8 @@ create table Pedido(
   Tamano int check (Tamano in (10, 14, 18)),
   Ingredientes_Pizza nvarchar(60) not null,
   Descripcion nvarchar(50) not null,
+  Id_Extra int,
+  foreign key(Id_Extra) references Extra(Id_Extra)
   )
   
   create table Empleado(
@@ -110,12 +112,19 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
     Id_Cliente int,
     foreign key (Id_Cliente) references Clientes(Id_Cliente),
     Metodo_pago nvarchar(20)
-    )
+    ),
     
     create table Topping(
-     Id_Materiaprima int identity(1,1) primary key,
-     Est_Ingrediente int not null default 1,
-     )
+     Id_Topping int identity(1,1) primary key,
+     Est_Toppping int not null default 1,
+     ),
+     
+     create table Extras(
+      Id_Extra int identity(1,1) primary key,
+      Id_Topping int,
+      foreign key(Id_Topping) references Topping(Id_Topping),
+      )
+      
     
    
   
