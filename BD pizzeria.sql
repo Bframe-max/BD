@@ -16,12 +16,24 @@ foreign key (Id_pedido) references Pedido(Id_pedido),
 
 create table Pedido(
  Id_pedido int identity(1,1) primary key,
+ Num_pedido int identity(1,1),
  Fecha_pedido datetime default getdate() not null,
  foreign key (PNC) references Clientes(PNC),
  foreign key (Id_Cliente) references Clientes(Id_Cliente),
  Metodo_pago nvarchar(20),
  Total_pago money,
- foreign key (Id_producto) references Productos(Id_producto)
+ Id_pizza int,
+ foreign key (Id_pizza) references Productos(Id_pizza)
+ ),
+ 
+ create table Pizzas(
+  Id_pizza int identity(1,1) primary key,
+  precio_pizza money not null,
+  slice int not null,
+  Descripcion nvarchar(50) not null,
+  )
+  
+  create table
  
  
  /*que mas podemos agregar?*/
