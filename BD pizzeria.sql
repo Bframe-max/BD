@@ -112,6 +112,11 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
     Metodo_pago nvarchar(20)
     )
     
+    create table Topping(
+     Id_Materiaprima int identity(1,1) primary key,
+     Est_Ingrediente_n int not null default 1,
+     Ingrediente_n nvarchcar(30),
+     )
     
    
   
