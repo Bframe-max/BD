@@ -17,7 +17,9 @@ create table Pedido(
  Id_Pedido int identity(1,1) primary key,
  Num_Pedido int identity(1,1),
  Fecha_Pedido datetime default getdate() not null,
+ PNC nvarchar(30),
  foreign key (PNC) references Clientes(PNC),
+ Id_Cliente int,
  foreign key (Id_Cliente) references Clientes(Id_Cliente),
  Metodo_pago nvarchar(20),
  Total_pago money,
@@ -33,12 +35,18 @@ create table Pedido(
   Descripcion nvarchar(50) not null,
   )
   
+  create table Empleado(
+   Id_Empleado 
+  
+  
   create table Entrega(
+   ID_Pedido int,
    foreign key(Id_pedido) references Pedido(Id_pedido),
    FechaHoraEntrega DATETIME DEFAULT GETDATE(),
    Dir_entrega nvarchar(50) not null,
    Id_Empleado int,
    foreign key(Id_Empleado) references Empleados(Id_Empleado),
+   Id_Pedido int,
    foreign key(Id_Pedido) references Pedido(Id_Pedido),
    Tipo_Entrega nvarchar(20)
    )
