@@ -19,7 +19,6 @@ create table Pedido(
  Fecha_Pedido datetime default getdate() not null,
  foreign key (PNC) references Clientes(PNC),
  foreign key (Id_Cliente) references Clientes(Id_Cliente),
- Metodo_pago nvarchar(20),
  Total_pago money,
  Id_pizza int,
  foreign key (Id_pizza) references Pizzas(Id_pizza)
@@ -46,7 +45,10 @@ create table Pedido(
    create table Pago(
     Id_pago int identity(1,1) primary key,
     foreign key(Id_Pedido) references Pedido(Id_Pedido),
-    Metodo_pago
+    foreign key (PNC) references Clientes(PNC),
+    foreign key (Id_Cliente) references Clientes(Id_Cliente),
+    Metodo_pago nvarchar(20)
+    )
     
    
    
