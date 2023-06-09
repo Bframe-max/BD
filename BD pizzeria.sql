@@ -88,16 +88,12 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
     Id_Repartidor int identity(1,1) primary key not null,
     Id_Empleado int,
     foreign key (Id_Empleado) references Empleado(Id_Empleado),
-    PN_Empleado nvarchar(30) 
-    foreign key (PN_Empleado) references Empleado(PN_Empleado),
-    PA_Empleado nvarchar(30),
-    foreign key (PN_Empleado) references Empleado(PN_Empleado)
     )
    
   
   create table Entrega(
-   ID_Pedido int,
-   foreign key(Id_pedido) references Pedido(Id_pedido),
+   Id_Pedido int,
+   foreign key(Id_Pedido) references Pedido(Id_Pedido),
    FechaHoraEntrega DATETIME DEFAULT GETDATE(),
    Dir_entrega nvarchar(50) not null,
    Id_Empleado int,
@@ -109,8 +105,9 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
    
    create table Pago(
     Id_pago int identity(1,1) primary key,
+    Id_Pedido int,
     foreign key(Id_Pedido) references Pedido(Id_Pedido),
-    foreign key (PNC) references Clientes(PNC),
+    Id_Cliente int,
     foreign key (Id_Cliente) references Clientes(Id_Cliente),
     Metodo_pago nvarchar(20)
     )
