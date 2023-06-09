@@ -31,7 +31,7 @@ create table Pedido(
  create table Pizzas(
   Id_Pizza int identity(1,1) primary key not null,
   precio_Pizza money not null,
-  slice int not null,
+  Tamano int check (Tamano in (10, 14, 18)),
   Ingredientes_Pizza nvarchar(60) not null,
   Descripcion nvarchar(50) not null,
   )
@@ -44,7 +44,7 @@ create table Pedido(
    SA_Empleado nvarchar(30),
    cedula_Empleado nvarchar(15) check (cedula_Empleado LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][A-Z]'),
    Tel_E nvarchar(8) check (Tel_E LIKE '[78][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
-   Email nvarchar(100)
+   Email nvarchar(100),
    FechaContratacion DATE,
    Puesto nvarchar(50),
    
@@ -111,6 +111,8 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
     foreign key (Id_Cliente) references Clientes(Id_Cliente),
     Metodo_pago nvarchar(20)
     )
+    
+    
    
   
     
