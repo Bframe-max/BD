@@ -57,6 +57,16 @@ create table Pedido(
     foreign key (Id_Cliente) references Clientes(Id_Cliente),
     Metodo_pago nvarchar(20)
     )
+   
+   create table Repartidor(
+    Id_Repartidor int identity(1,1) primary key,
+    PN_Repartidor nvarchar(30) not null,
+    SN_Repartidor nvarchar(30),
+    PA_Repartidor nvarchar(30) not null,
+    SA_Repartidor nvarchar(30),
+    cedula_Repartidor nvarchar(15) check (cedula_Repartdior LIKE '[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][A-Z]'),
+    Tel_R nvarchar(8) check (Tel_R LIKE '[78][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+    )
     
    
    
