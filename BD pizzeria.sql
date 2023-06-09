@@ -21,7 +21,6 @@ create table Pedido(
  Num_Pedido int identity(1,1),
  Fecha_Pedido datetime default getdate() not null,
  PNC nvarchar(30),
- foreign key (PNC) references Clientes(PNC),
  Id_Cliente int,
  foreign key (Id_Cliente) references Clientes(Id_Cliente),
  Total_pago money,
