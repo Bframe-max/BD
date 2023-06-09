@@ -19,6 +19,9 @@ create table Pedido(
  Fecha_pedido datetime default getdate() not null,
  foreign key (PNC) references Clientes(PNC),
  foreign key (Id_Cliente) references Clientes(Id_Cliente),
+ Metodo_pago nvarchar(20),
+ Total_pago money,
+ foreign key (Id_producto) references Productos(Id_producto)
  
  
  /*que mas podemos agregar?*/
