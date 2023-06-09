@@ -115,7 +115,6 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
     create table Topping(
      Id_Materiaprima int identity(1,1) primary key,
      Est_Ingrediente int not null default 1,
-     Descripcion nvarchcar(30),
      )
     
    
