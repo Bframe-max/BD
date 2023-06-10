@@ -183,7 +183,7 @@ BEGIN
   END
 END
 
-
+---------------------------------
 /* Procedimiento de insercion */
 -------------------------------
 CREATE PROCEDURE InsertarCliente
@@ -227,7 +227,220 @@ BEGIN
 
   PRINT 'Datos insertados correctamente'
 END
-  
+
+--------------------------------------------  
+/*Procedimientos almacenado de modificacion*/
+--------------------------------------------
+
+
+CREATE PROCEDURE ModificarClientes (
+    @PNC NVARCHAR(30),
+    @SNC NVARCHAR(30),
+    @PAC NVARCHAR(30),
+    @SAC NVARCHAR(30),
+    @cedula_C NVARCHAR(15),
+    @Tel_C NVARCHAR(8),
+    @Dir_C NVARCHAR(100),
+    @Email NVARCHAR(100),
+    @IdCliente INT
+)
+AS
+BEGIN
+    DECLARE @idcliente AS INT
+    SET @idcliente = (SELECT Id_Cliente FROM Clientes WHERE Id_Cliente = @IdCliente)
+
+    IF (@IdCliente = @idcliente)
+    BEGIN
+        IF (@PNC IS NOT NULL AND @PAC IS NOT NULL AND @cedula_C IS NOT NULL AND @Tel_C IS NOT NULL AND @Dir_C IS NOT NULL AND @Email IS NOT NULL)
+        BEGIN
+            UPDATE Clientes
+            SET PNC = @PNC, SNC = @SNC, PAC = @PAC, SAC = @SAC, cedula_C = @cedula_C, Tel_C = @Tel_C, Dir_C = @Dir_C, Email = @Email
+            WHERE Id_Cliente = @IdCliente
+
+            PRINT 'Los datos del cliente han sido modificados correctamente.'
+        END
+        ELSE
+        BEGIN
+            PRINT 'No se permiten valores nulos para PNC, PAC, cedula_C, Tel_C, Dir_C y Email.'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Cliente no encontrado.'
+    END
+END
+
+
+CREATE PROCEDURE ModificarEmpleado (
+    @PN_Empleado NVARCHAR(30),
+    @SN_Empleado NVARCHAR(30),
+    @PA_Empleado NVARCHAR(30),
+    @SA_Empleado NVARCHAR(30),
+    @cedula_Empleado NVARCHAR(15),
+    @Tel_E NVARCHAR(8),
+    @Email NVARCHAR(100),
+    @FechaContratacion DATE,
+    @Salario DECIMAL(10, 2),
+    @HorasTrabajo INT,
+    @FechaNacimiento DATE,
+    @EstadoCivil VARCHAR(20),
+    @Genero VARCHAR(10),
+    @NumeroCuentaBancaria VARCHAR(20),
+    @IdEmpleado INT
+)
+AS
+BEGIN
+    DECLARE @idempleado AS INT
+    SET @idempleado = (SELECT Id_Empleado FROM Empleado WHERE Id_Empleado = @IdEmpleado)
+
+    IF (@IdEmpleado = @idempleado)
+    BEGIN
+        IF (@PN_Empleado IS NOT NULL AND @PA_Empleado IS NOT NULL AND @cedula_Empleado IS NOT NULL AND @Tel_E IS NOT NULL AND @Email IS NOT NULL)
+        BEGIN
+            UPDATE Empleado
+            SET PN_Empleado = @PN_Empleado, SN_Empleado = @SN_Empleado, PA_Empleado = @PA_Empleado, SA_Empleado = @SA_Empleado,
+                cedula_Empleado = @cedula_Empleado, Tel_E = @Tel_E, Email = @Email, FechaContratacion = @FechaContratacion,
+                Salario = @Salario, HorasTrabajo = @HorasTrabajo, FechaNacimiento = @FechaNacimiento, EstadoCivil = @EstadoCivil,
+                Genero = @Genero, NumeroCuentaBancaria = @NumeroCuentaBancaria
+            WHERE Id_Empleado = @IdEmpleado
+
+            PRINT 'Los datos del empleado han sido modificados correctamente.'
+        END
+        ELSE
+        BEGIN
+            PRINT 'No se permiten valores nulos para PN_Empleado, PA_Empleado, cedula_Empleado, Tel_E y Email.'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Empleado no encontrado.'
+    END
+END
+
+
+CREATE PROCEDURE ModificarPedido (
+    @Num_Pedido INT,
+    @Fecha_Pedido DATETIME,
+    @Id_Cliente INT,
+    @Id_Pizza INT,
+    @Id_Pedido INT
+)
+AS
+BEGIN
+    DECLARE @idpedido AS INT
+    SET @idpedido = (SELECT Id_Pedido FROM Pedido WHERE Id_Pedido = @Id_Pedido)
+
+    IF (@Id_Pedido = @idpedido)
+    BEGIN
+        IF (@Fecha_Pedido IS NOT NULL AND @Id_Cliente IS NOT NULL AND @Id_Pizza IS NOT NULL)
+        BEGIN
+            UPDATE Pedido
+            SET Num_Pedido = @Num_Pedido, Fecha_Pedido = @Fecha_Pedido, Id_Cliente = @Id_Cliente, Id_Pizza = @Id_Pizza
+            WHERE Id_Pedido = @Id_Pedido
+
+            PRINT 'Los datos del pedido han sido modificados correctamente.'
+        END
+        ELSE
+        BEGIN
+            PRINT 'No se permiten valores nulos para Fecha_Pedido, Id_Cliente y Id_Pizza.'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Pedido no encontrado.'
+    END
+END
+
+CREATE PROCEDURE ModificarPizza (
+    @Id_Pizza INT,
+    @Precio_Pizza MONEY,
+    @Tamaño_Pizza INT,
+    @Slice INT,
+    @Id_Topping INT,
+    @Descripcion NVARCHAR(50)
+)
+AS
+BEGIN
+    IF (@Precio_Pizza > 0)
+    BEGIN
+        IF (@Tamaño_Pizza = 10 OR @Tamaño_Pizza = 14 OR @Tamaño_Pizza = 18)
+        BEGIN
+            IF EXISTS (SELECT 1 FROM Pizzas WHERE Id_Pizza = @Id_Pizza)
+            BEGIN
+                UPDATE Pizzas
+                SET precio_Pizza = @Precio_Pizza,
+                    @Tamaño_Pizza = @Tamaño_Pizza,
+                    slice = @Slice,
+                    Id_Topping = @Id_Topping,
+                    Descripcion = @Descripcion
+                WHERE Id_Pizza = @Id_Pizza
+            END
+            ELSE
+            BEGIN
+                PRINT 'Pizza no encontrada'
+            END
+        END
+        ELSE
+        BEGIN
+            PRINT 'El tamaño de la pizza debe ser 10, 14 o 18 pulgadas'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'El precio de la pizza debe ser mayor a cero'
+    END
+END
+
+
+  CREATE PROCEDURE ModificarPago (
+    @Id_Pago INT,
+    @Id_Pedido INT,
+    @ID_Cliente INT,
+    @Metodo_pago NVARCHAR(20)
+)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Pago WHERE Id_Pago = @Id_Pago)
+    BEGIN
+        UPDATE Pago
+        SET Id_Pedido = @Id_Pedido,
+            ID_Cliente = @ID_Cliente,
+            Metodo_pago = @Metodo_pago
+        WHERE Id_Pago = @Id_Pago
+    END
+    ELSE
+    BEGIN
+        PRINT 'Pago no encontrado'
+    END
+END
+
+    CREATE PROCEDURE ModificarEntrega (
+    @ID_Pedido INT,
+    @Estado NVARCHAR(20),
+    @FechaHoraEntrega DATETIME,
+    @Dir_Entrega NVARCHAR(50),
+    @Id_Empleado INT,
+    @Id_Cliente INT,
+    @Tipo_Entrega NVARCHAR(20)
+)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Entrega WHERE ID_Pedido = @ID_Pedido)
+    BEGIN
+        UPDATE Entrega
+        SET Estado = @Estado,
+            FechaHoraEntrega = @FechaHoraEntrega,
+            Dir_Entrega = @Dir_Entrega,
+            Id_Empleado = @Id_Empleado,
+            Id_Cliente = @Id_Cliente,
+            Tipo_Entrega = @Tipo_Entrega
+        WHERE ID_Pedido = @ID_Pedido
+    END
+    ELSE
+    BEGIN
+        PRINT 'Entrega no encontrada'
+    END
+END
 
 
 
