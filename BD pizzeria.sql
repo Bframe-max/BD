@@ -122,7 +122,7 @@ CREATE TABLE DetallePedido (
   Id_DetalleP INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
   Id_Pedido INT not null,
   Id_Pizza INT not null,
-  Id_Extras INT,
+  Id_Extras INT null,
   Id_Pago INT not null,
   Cantidad INT not null,
   PrecioUnitario MONEY not null,
@@ -134,8 +134,7 @@ CREATE TABLE DetallePedido (
   FOREIGN KEY (Id_Pago) REFERENCES Pago(Id_Pago),
   FOREIGN KEY (Id_Pizza) REFERENCES Pizzas(Id_Pizza)
   Id_Municipio int not null,
-  foreign key (Id_Municipio) references Municipios(Id_Municipio),
-  Di
+  foreign key (Id_Municipio) references Municipios(Id_Municipio)
 )
 
 CREATE TABLE Entrega (
