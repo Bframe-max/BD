@@ -73,6 +73,7 @@ CREATE TABLE Topping (
 CREATE TABLE Pizzas (
   Id_Pizza INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
   precio_Pizza MONEY NOT NULL,
+  Nombre_Pizza nvarchar(30) not null,
   slice INT NOT NULL,
   Id_Topping INT,
   Descripcion NVARCHAR(50),
@@ -387,14 +388,6 @@ BEGIN
   -- Insertar los datos
   INSERT INTO Topping (Ingredientes_Pizza, IDMateriaPrima)
   VALUES (@Ingredientes_Pizza, @IDMateriaPrima)
-
-  PRINT 'Datos insertados correctamente'
-END
-
-
-  -- Insertar los datos
-  INSERT INTO Topping (Id_Topping, Ingredientes_Pizza, IDMateriaPrima)
-  VALUES (@Id_Topping, @Ingredientes_Pizza, @IDMateriaPrima)
 
   PRINT 'Datos insertados correctamente'
 END
