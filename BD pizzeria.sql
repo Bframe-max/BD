@@ -727,6 +727,157 @@ BEGIN
 END
 
 
+--------------------------------------------------------------------------------------------------
+/*Procedimiento almacenado de busqueda*/
+
+-----Busqueda por Id Cliente----
+CREATE PROCEDURE BuscarClienteById
+    @Id_Cliente INT
+AS
+BEGIN
+    -- Verificar si el Cliente existe
+    IF EXISTS (SELECT 1 FROM Clientes WHERE Id_Cliente = @Id_Cliente)
+    BEGIN
+        -- Realizar la búsqueda por Id
+        SELECT * FROM Clientes WHERE Id_Cliente = @Id_Cliente
+    END
+    ELSE
+    BEGIN
+        PRINT 'Cliente no encontrado'
+    END
+END
+
+-------Busqueda por nombre Cliente-------
+CREATE PROCEDURE BuscarClienteByNombre
+    @Nombre NVARCHAR(100)
+AS
+BEGIN
+    -- Verificar si el Nombre está en blanco
+    IF @Nombre = ''
+    BEGIN
+        PRINT 'El campo de nombre no puede estar en blanco'
+    END
+    ELSE
+    BEGIN
+        -- Realizar la búsqueda por nombre
+        SELECT * FROM Clientes WHERE PAC = @Nombre OR SAC = @Nombre
+    END
+END
+
+
+----Busqueda por Id empleado---
+CREATE PROCEDURE BuscarEmpleadoById
+    @IdEmpleado INT
+AS
+BEGIN
+    -- Verificar si existe el empleado con el ID proporcionado
+    IF EXISTS (SELECT 1 FROM Empleado WHERE Id_Empleado = @IdEmpleado)
+    BEGIN
+        -- Realizar la búsqueda del empleado por su ID
+        SELECT * FROM Empleado WHERE Id_Empleado = @IdEmpleado
+    END
+    ELSE
+    BEGIN
+        PRINT 'No se encontró ningún empleado con el ID especificado'
+    END
+END
+
+
+----Busqueda por Nombre empleado----
+CREATE PROCEDURE BuscarEmpleadoByNombre
+    @Nombre NVARCHAR(30)
+AS
+BEGIN
+    -- Verificar si existen empleados con el nombre proporcionado
+    IF EXISTS (SELECT 1 FROM Empleado WHERE PN_Empleado = @Nombre OR PA_Empleado = @Nombre)
+    BEGIN
+        -- Realizar la búsqueda de empleados por nombre
+        SELECT * FROM Empleado WHERE PN_Empleado = @Nombre OR PA_Empleado = @Nombre
+    END
+    ELSE
+    BEGIN
+        PRINT 'No se encontraron empleados con el nombre especificado'
+    END
+END
+
+----Busqueda por Id o nombre del topping
+
+CREATE PROCEDURE BuscarTopping
+    @Id INT = NULL,
+    @Nombre NVARCHAR(60) = NULL
+AS
+BEGIN
+    -- Verificar si se proporcionó el identificador y/o el nombre de ingrediente
+    IF (@Id IS NULL AND @Nombre IS NULL)
+    BEGIN
+        PRINT 'Debe proporcionar al menos el identificador o el nombre del ingrediente'
+        RETURN
+    END
+
+    -- Realizar la búsqueda de toppings según los parámetros proporcionados
+    IF (@Id IS NOT NULL)
+    BEGIN
+        SELECT * FROM Topping WHERE Id_Topping = @Id
+    END
+
+    IF (@Nombre IS NOT NULL)
+    BEGIN
+        SELECT * FROM Topping WHERE Ingredientes_Pizza LIKE '%' + @Nombre + '%'
+    END
+END
+
+----Busqueda por Id, precio de pizza y tamaño---
+CREATE PROCEDURE BuscarPizza
+    @Id INT = NULL,
+    @IdTopping INT = NULL,
+    @Tamaño INT = NULL,
+    @Precio MONEY = NULL
+AS
+BEGIN
+    -- Verificar si se proporcionó al menos uno de los parámetros de búsqueda
+    IF (@Id IS NULL AND @IdTopping IS NULL AND @Tamaño IS NULL AND @Precio IS NULL)
+    BEGIN
+        PRINT 'Debe proporcionar al menos uno de los parámetros de búsqueda'
+        RETURN
+    END
+
+    -- Realizar la búsqueda de pizzas según los parámetros proporcionados
+    SELECT *
+    FROM Pizzas
+    WHERE (@Id IS NULL OR Id_Pizza = @Id)
+        AND (@IdTopping IS NULL OR Id_Topping = @IdTopping)
+        AND (@Tamaño IS NULL OR Tamaño_Pizza = @Tamaño)
+        AND (@Precio IS NULL OR precio_Pizza = @Precio)
+END
+
+
+----Busqueda de pedido por id , total de pedido, y si fue entregado o no----
+
+
+
+CREATE PROCEDURE BuscarPedido
+    @IdPedido INT = NULL,
+    @TotalPedido MONEY = NULL,
+    @Entregado BIT = NULL
+AS
+BEGIN
+    -- Verificar si se proporcionó al menos uno de los parámetros de búsqueda
+    IF (@IdPedido IS NULL AND @TotalPedido IS NULL AND @Entregado IS NULL)
+    BEGIN
+        PRINT 'Debe proporcionar al menos uno de los parámetros de búsqueda'
+        RETURN
+    END
+
+    -- Realizar la búsqueda de pedidos según los parámetros proporcionados
+    SELECT P.*, E.Estado
+    FROM Pedido AS P
+    LEFT JOIN Entrega AS E ON P.Id_Pedido = E.ID_Pedido
+    WHERE (@IdPedido IS NULL OR P.Id_Pedido = @IdPedido)
+        AND (@TotalPedido IS NULL OR EXISTS (SELECT 1 FROM DetallePedido WHERE Id_Pedido = P.Id_Pedido GROUP BY Id_Pedido HAVING SUM(Subtotal) = @TotalPedido))
+        AND (@Entregado IS NULL OR (CASE WHEN E.Estado = 'Entregado' THEN 1 ELSE 0 END) = @Entregado)
+END
+
+
 
 
    
