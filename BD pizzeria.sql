@@ -162,6 +162,9 @@ create table Municipios (
   foreign key (Id_Departamento) references Departamentos(Id_Departamento)
   )
   
+create table Proveedores(
+
+  
 
 ---------------------------------
 /* Procedimiento de insercion */
