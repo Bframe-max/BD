@@ -511,6 +511,42 @@ BEGIN
 END
 
 
+/* Procedimiento Insercion */
+-----------------------------
+CREATE PROCEDURE InsertarPago
+  @Id_Pedido INT,
+  @ID_Cliente INT,
+  @Metodo_pago NVARCHAR(20)
+AS
+BEGIN
+  -- Verificar la existencia de Id_Pedido y ID_Cliente
+  IF NOT EXISTS (SELECT 1 FROM Pedido WHERE Id_Pedido = @Id_Pedido)
+  BEGIN
+    PRINT 'El pedido no existe.'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Clientes WHERE Id_Cliente = @ID_Cliente)
+  BEGIN
+    PRINT 'El cliente no existe.'
+    RETURN
+  END
+
+  -- Verificar que Metodo_pago no esté vacío
+  IF @Metodo_pago='' 
+  BEGIN
+    PRINT 'El método de pago no puede estar vacío.'
+    RETURN
+  END
+
+  -- Insertar los datos en la tabla Pago
+  INSERT INTO Pago (Id_Pedido, ID_Cliente, Metodo_pago)
+  VALUES (@Id_Pedido, @ID_Cliente, @Metodo_pago)
+
+  PRINT 'Pago insertado correctamente.'
+END
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
