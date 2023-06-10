@@ -63,12 +63,11 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
 (DEFAULT, 4) -- Laura Torres está en mercadeo
 
 CREATE TABLE Topping (
-  Id_Topping INT NOT NULL,
+  Id_Topping INT identity(1,1) primary key not null,
   Ingredientes_Pizza NVARCHAR(60) NOT NULL,
   Est_Topping INT NOT NULL DEFAULT 1
   IDMateriaPrima INT,
   FOREIGN KEY (IDMateriaPrima) REFERENCES MateriaPrima(IDMateriaPrima),
-  CONSTRAINT UQ_Id_Topping UNIQUE (Id_Topping)
 )
 
 CREATE TABLE Pizzas (
@@ -359,33 +358,39 @@ END
 /* Procedimiento Insercion */
 ------------------------------
 CREATE PROCEDURE InsertarTopping
-  @Id_Topping INT,
   @Ingredientes_Pizza NVARCHAR(60),
   @IDMateriaPrima INT
 AS
 BEGIN
-  -- Verificar que los campos no estén vacíos
-  IF @Ingredientes_Pizza IS NULL OR @Ingredientes_Pizza = '' OR
-     @Id_Topping IS NULL OR
-     @IDMateriaPrima IS NULL
+  -- Verificar si el Ingrediente_Pizza ya existe
+  IF EXISTS (SELECT 1 FROM Topping WHERE Ingredientes_Pizza = @Ingredientes_Pizza)
   BEGIN
-    PRINT 'No puede estar vacío'
+    PRINT 'Ya registrado'
     RETURN
   END
 
-  -- Verificar si el Id_Topping ya está registrado
-  IF EXISTS (SELECT 1 FROM Topping WHERE Id_Topping = @Id_Topping)
+  -- Verificar que los campos no estén vacíos
+  IF @Ingredientes_Pizza IS NULL OR @Ingredientes_Pizza = '' OR
+     @IDMateriaPrima IS NULL
   BEGIN
-    PRINT 'Ya registrado'
+    PRINT 'No pueden estar vacíos'
     RETURN
   END
 
   -- Verificar si el IDMateriaPrima existe
   IF NOT EXISTS (SELECT 1 FROM MateriaPrima WHERE IDMateriaPrima = @IDMateriaPrima)
   BEGIN
-    PRINT 'Materia prima no existe'
+    PRINT 'Materia Prima no existe'
     RETURN
   END
+
+  -- Insertar los datos
+  INSERT INTO Topping (Ingredientes_Pizza, IDMateriaPrima)
+  VALUES (@Ingredientes_Pizza, @IDMateriaPrima)
+
+  PRINT 'Datos insertados correctamente'
+END
+
 
   -- Insertar los datos
   INSERT INTO Topping (Id_Topping, Ingredientes_Pizza, IDMateriaPrima)
