@@ -158,10 +158,75 @@ create table Municipios (
   foreign key (Id_Departamento) references Departamentos(Id_Departamento)
   )
   
-  create procedure In_Toppping(
-    @Ingr_Pizza nvarchar(16),
+
+ /* Procedimiento de Insercion*/
+  -------------------------------
+CREATE PROCEDURE InsertarTopping
+@Ingr_Pizza NVARCHAR(60),
+@Est_Topping INT
+AS
+BEGIN
+  IF @Ingredientes_Pizza = ''
+  BEGIN
+    PRINT 'El ingrediente de la pizza no puede quedar en blanco.'
+  END
+  ELSE IF EXISTS (SELECT 1 FROM Topping WHERE Ingredientes_Pizza = @Ingredientes_Pizza)
+  BEGIN
+    PRINT 'El topping ya está registrado.'
+  END
+  ELSE
+  BEGIN
+    INSERT INTO Topping (Ingredientes_Pizza, Est_Topping)
+    VALUES (@Ingredientes_Pizza, @Est_Topping)
     
-    
+    PRINT 'Topping registrado exitosamente.'
+  END
+END
+
+
+/* Procedimiento de insercion */
+-------------------------------
+CREATE PROCEDURE InsertarCliente
+  @PNC NVARCHAR(30),
+  @SNC NVARCHAR(30),
+  @PAC NVARCHAR(30),
+  @SAC NVARCHAR(30),
+  @cedula_C NVARCHAR(15),
+  @Tel_C NVARCHAR(8),
+  @Dir_C NVARCHAR(100),
+  @Email NVARCHAR(100),
+  @Id_Municipio INT
+AS
+BEGIN
+  SET NOCOUNT ON
+
+  -- Verificar si cedula_C ya existe
+  IF EXISTS(SELECT 1 FROM Clientes WHERE cedula_C = @cedula_C)
+  BEGIN
+    PRINT 'Cédula ya registrada'
+    RETURN
+  END
+
+  -- Verificar que las columnas no estén en blanco
+  IF @PNC = '' OR @SNC = '' OR @PAC = '' OR @cedula_C = '' OR @Dir_C = ''
+  BEGIN
+    PRINT 'No pueden quedar en blanco'
+    RETURN
+  END
+
+  -- Verificar si el municipio existe
+  IF NOT EXISTS(SELECT 1 FROM Municipios WHERE Id_Municipio = @Id_Municipio)
+  BEGIN
+    PRINT 'Municipio no existe'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Clientes (PNC, SNC, PAC, SAC, cedula_C, Tel_C, Dir_C, Email, Id_Municipio)
+  VALUES (@PNC, @SNC, @PAC, @SAC, @cedula_C, @Tel_C, @Dir_C, @Email, @Id_Municipio)
+
+  PRINT 'Datos insertados correctamente'
+END
   
 
 
