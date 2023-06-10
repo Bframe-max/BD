@@ -138,12 +138,12 @@ CREATE TABLE DetallePedido (
 )
 
 CREATE TABLE Entrega (
-  ID_Pedido INT,
+  ID_Pedido INT not null,
   Estado NVARCHAR(20),
   FechaHoraEntrega DATETIME DEFAULT GETDATE(),
   Dir_Entrega NVARCHAR(50) NOT NULL,
-  Id_Empleado INT,
-  Id_Cliente INT,
+  Id_Empleado INT not null,
+  Id_Cliente INT not null,
   Tipo_Entrega NVARCHAR(20),
   FOREIGN KEY (ID_Pedido) REFERENCES Pedido(Id_Pedido),
   FOREIGN KEY (Id_Empleado) REFERENCES Empleado(Id_Empleado),
