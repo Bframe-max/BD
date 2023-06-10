@@ -353,6 +353,47 @@ END
 
 
 
+/* Procedimiento Insercion */
+------------------------------
+CREATE PROCEDURE InsertarTopping
+  @Id_Topping INT,
+  @Ingredientes_Pizza NVARCHAR(60),
+  @IDMateriaPrima INT
+AS
+BEGIN
+  -- Verificar que los campos no estén vacíos
+  IF @Ingredientes_Pizza IS NULL OR @Ingredientes_Pizza = '' OR
+     @Id_Topping IS NULL OR
+     @IDMateriaPrima IS NULL
+  BEGIN
+    PRINT 'No puede estar vacío'
+    RETURN
+  END
+
+  -- Verificar si el Id_Topping ya está registrado
+  IF EXISTS (SELECT 1 FROM Topping WHERE Id_Topping = @Id_Topping)
+  BEGIN
+    PRINT 'Ya registrado'
+    RETURN
+  END
+
+  -- Verificar si el IDMateriaPrima existe
+  IF NOT EXISTS (SELECT 1 FROM MateriaPrima WHERE IDMateriaPrima = @IDMateriaPrima)
+  BEGIN
+    PRINT 'Materia prima no existe'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Topping (Id_Topping, Ingredientes_Pizza, IDMateriaPrima)
+  VALUES (@Id_Topping, @Ingredientes_Pizza, @IDMateriaPrima)
+
+  PRINT 'Datos insertados correctamente'
+END
+
+
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
