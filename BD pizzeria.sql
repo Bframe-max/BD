@@ -164,30 +164,6 @@ create table Municipios (
   )
   
 
- /* Procedimiento de Insercion*/
-  -------------------------------
-CREATE PROCEDURE InsertarTopping
-@Ingr_Pizza NVARCHAR(60),
-@Est_Topping INT
-AS
-BEGIN
-  IF @Ingredientes_Pizza = ''
-  BEGIN
-    PRINT 'El ingrediente de la pizza no puede quedar en blanco.'
-  END
-  ELSE IF EXISTS (SELECT 1 FROM Topping WHERE Ingredientes_Pizza = @Ingredientes_Pizza)
-  BEGIN
-    PRINT 'El topping ya está registrado.'
-  END
-  ELSE
-  BEGIN
-    INSERT INTO Topping (Ingredientes_Pizza, Est_Topping)
-    VALUES (@Ingredientes_Pizza, @Est_Topping)
-    
-    PRINT 'Topping registrado exitosamente.'
-  END
-END
-
 ---------------------------------
 /* Procedimiento de insercion */
 -------------------------------
@@ -341,7 +317,7 @@ BEGIN
   END
 
   -- Verificar que el Id_Empleado y el Id_Puesto no estén vacíos
-  IF @Id_Empleado IS NULL OR @Id_Puesto IS NULL
+  IF @Id_Empleado='' OR @Id_Puesto=''
   BEGIN
     PRINT 'No puede quedar vacío'
     RETURN
@@ -372,7 +348,7 @@ BEGIN
 
   -- Verificar que los campos no estén vacíos
   IF @Ingredientes_Pizza IS NULL OR @Ingredientes_Pizza = '' OR
-     @IDMateriaPrima IS NULL
+     @IDMateriaPrima=''
   BEGIN
     PRINT 'No pueden estar vacíos'
     RETURN
@@ -413,9 +389,9 @@ BEGIN
 
   -- Verificar que los campos no estén vacíos
   IF @Nombre_Pizza IS NULL OR @Nombre_Pizza = '' OR
-     @precio_Pizza IS NULL OR
-     @slice IS NULL OR
-     @Id_Topping IS NULL
+     @precio_Pizza='' OR
+     @slice='' OR
+     @Id_Topping=''
   BEGIN
     PRINT 'No pueden quedar vacíos'
     RETURN
@@ -454,7 +430,7 @@ BEGIN
 
   -- Verificar que los campos no estén vacíos
   IF @Nombre IS NULL OR @Nombre = '' OR
-     @Stock IS NULL OR
+     @Stock=''
      @UnidadMedida IS NULL OR @UnidadMedida = ''
   BEGIN
     PRINT 'No pueden quedar vacíos'
@@ -466,6 +442,72 @@ BEGIN
   VALUES (@Nombre, @Stock, @UnidadMedida)
 
   PRINT 'Datos insertados correctamente'
+END
+
+
+/* Procedimiento Insercion */
+-----------------------------
+CREATE PROCEDURE InsertarPedido
+  @Num_Pedido INT,
+  @Id_Cliente INT,
+  @Id_Pizza INT,
+  @Id_Departamento INT,
+  @Id_Municipio INT,
+  @Dir_P NVARCHAR(100)
+AS
+BEGIN
+  -- Verificar si el número de pedido ya existe
+  IF EXISTS (SELECT 1 FROM Pedido WHERE Num_Pedido = @Num_Pedido)
+  BEGIN
+    PRINT 'Número de pedido ya registrado'
+    RETURN
+  END
+
+  -- Verificar que los campos no estén vacíos
+  IF @Num_Pedido='' OR
+     @Id_Cliente='' OR
+     @Id_Pizza='' OR
+     @Id_Departamento='' OR
+     @Id_Municipio='' OR
+     @Dir_P IS NULL OR @Dir_P = ''
+  BEGIN
+    PRINT 'No pueden quedar vacíos'
+    RETURN
+  END
+
+  -- Verificar si el cliente existe
+  IF NOT EXISTS (SELECT 1 FROM Clientes WHERE Id_Cliente = @Id_Cliente)
+  BEGIN
+    PRINT 'Cliente no registrado'
+    RETURN
+  END
+
+  -- Verificar si la pizza existe
+  IF NOT EXISTS (SELECT 1 FROM Pizzas WHERE Id_Pizza = @Id_Pizza)
+  BEGIN
+    PRINT 'Pizza no existe'
+    RETURN
+  END
+
+  -- Verificar si el departamento existe
+  IF NOT EXISTS (SELECT 1 FROM Departamentos WHERE Id_Departamento = @Id_Departamento)
+  BEGIN
+    PRINT 'Departamento no existe'
+    RETURN
+  END
+
+  -- Verificar si el municipio existe
+  IF NOT EXISTS (SELECT 1 FROM Municipios WHERE Id_Municipio = @Id_Municipio)
+  BEGIN
+    PRINT 'Municipio no existe'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Pedido (Num_Pedido, Fecha_Pedido, Id_Cliente, Id_Pizza, Id_Departamento, Id_Municipio, Dir_P)
+  VALUES (@Num_Pedido, GETDATE(), @Id_Cliente, @Id_Pizza, @Id_Departamento, @Id_Municipio, @Dir_P)
+
+  PRINT 'Pedido insertado correctamente'
 END
 
 
