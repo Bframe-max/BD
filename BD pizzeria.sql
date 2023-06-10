@@ -173,7 +173,7 @@ CREATE TABLE Proveedores (
   foreign key (Id_Municipio) references Municipios(Id_Municipio)
 )
 
-CREATE TABLE Pdts_Suministrados (
+CREATE TABLE Pdts_Sumin (
   Id_Producto INT IDENTITY(1,1) PRIMARY KEY,
   Nombre NVARCHAR(50) NOT NULL,
   Precio MONEY NOT NULL,
