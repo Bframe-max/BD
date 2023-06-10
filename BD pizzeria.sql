@@ -664,6 +664,26 @@ BEGIN
   PRINT 'Inserción exitosa'
 END
 
+/* Procedimiento Insercion */
+------------------------------
+CREATE PROCEDURE InsertarDepartamento
+  @ND NVARCHAR(30)
+AS
+BEGIN
+  -- Verificar campo no vacío
+  IF @ND=''
+  BEGIN
+    PRINT 'El nombre del departamento no puede estar vacío'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Departamentos (ND)
+  VALUES (@ND)
+
+  PRINT 'Inserción exitosa'
+END
+
 
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
