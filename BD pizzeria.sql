@@ -315,6 +315,44 @@ BEGIN
   PRINT 'Datos insertados correctamente'
 END
 
+
+/* Procedimiento de Insercion */
+----------------------------------
+CREATE PROCEDURE InsertarEmpleadoPuesto
+  @Id_Empleado INT,
+  @Id_Puesto INT
+AS
+BEGIN
+  -- Verificar si el Id_Empleado existe
+  IF NOT EXISTS(SELECT 1 FROM Empleado WHERE Id_Empleado = @Id_Empleado)
+  BEGIN
+    PRINT 'Empleado no registrado'
+    RETURN
+  END
+
+  -- Verificar si el Id_Puesto existe
+  IF NOT EXISTS(SELECT 1 FROM PuestoEmpleado WHERE Id_Puesto = @Id_Puesto)
+  BEGIN
+    PRINT 'Puesto no existe'
+    RETURN
+  END
+
+  -- Verificar que el Id_Empleado y el Id_Puesto no estén vacíos
+  IF @Id_Empleado IS NULL OR @Id_Puesto IS NULL
+  BEGIN
+    PRINT 'No puede quedar vacío'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto)
+  VALUES (@Id_Empleado, @Id_Puesto)
+
+  PRINT 'Datos insertados correctamente'
+END
+
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
