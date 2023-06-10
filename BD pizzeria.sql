@@ -42,10 +42,12 @@ CREATE TABLE PuestoEmpleado (
 )
 
 CREATE TABLE Empleado_Puesto (
+  Id_Empleado_Puesto int,
   Id_Empleado INT,
   Id_Puesto INT,
   FOREIGN KEY (Id_Empleado) REFERENCES Empleado(Id_Empleado),
-  FOREIGN KEY (Id_Puesto) REFERENCES PuestoEmpleado(Id_Puesto)
+  FOREIGN KEY (Id_Puesto) REFERENCES PuestoEmpleado(Id_Puesto),
+  CONSTRAINT UQ_Id_Empleado_Puesto UNIQUE (Id_Empleado_Puesto)
 )
 
 INSERT INTO PuestoEmpleado (Id_Puesto, Puesto) VALUES
@@ -224,6 +226,91 @@ BEGIN
   -- Insertar los datos
   INSERT INTO Clientes (PNC, SNC, PAC, SAC, cedula_C, Tel_C, Dir_C, Email, Id_Municipio)
   VALUES (@PNC, @SNC, @PAC, @SAC, @cedula_C, @Tel_C, @Dir_C, @Email, @Id_Municipio)
+
+  PRINT 'Datos insertados correctamente'
+END
+
+
+/* Procedimiento Insercion */
+-----------------------------
+CREATE PROCEDURE InsertarEmpleado
+  @PN_Empleado NVARCHAR(30),
+  @SN_Empleado NVARCHAR(30),
+  @PA_Empleado NVARCHAR(30),
+  @SA_Empleado NVARCHAR(30),
+  @cedula_Empleado NVARCHAR(15),
+  @Tel_E NVARCHAR(8),
+  @Email NVARCHAR(100),
+  @FechaContratacion DATE,
+  @Salario DECIMAL(10, 2),
+  @HorasTrabajo INT,
+  @FechaNacimiento DATE,
+  @EstadoCivil VARCHAR(20),
+  @Genero VARCHAR(10),
+  @NumeroCuentaBancaria VARCHAR(20)
+AS
+BEGIN
+  -- Verificar si cedula_Empleado ya existe
+  IF EXISTS(SELECT 1 FROM Empleado WHERE cedula_Empleado = @cedula_Empleado)
+  BEGIN
+    PRINT 'Empleado ya registrado'
+    RETURN
+  END
+
+  -- Verificar que las columnas no estén en blanco
+  IF @PN_Empleado = '' OR @PA_Empleado = '' OR @cedula_Empleado = '' OR @FechaContratacion IS NULL OR @Salario IS NULL
+  BEGIN
+    PRINT 'No pueden quedar vacios'
+    RETURN
+  END
+
+  -- Verificar que el salario no sea negativo ni cero
+  IF @Salario <= 0
+  BEGIN
+    PRINT 'Salario no puede ser negativo ni cero'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Empleado (PN_Empleado, SN_Empleado, PA_Empleado, SA_Empleado, cedula_Empleado, Tel_E, Email, FechaContratacion, Salario, HorasTrabajo, FechaNacimiento, EstadoCivil, Genero, NumeroCuentaBancaria)
+  VALUES (@PN_Empleado, @SN_Empleado, @PA_Empleado, @SA_Empleado, @cedula_Empleado, @Tel_E, @Email, @FechaContratacion, @Salario, @HorasTrabajo, @FechaNacimiento, @EstadoCivil, @Genero, @NumeroCuentaBancaria)
+
+  PRINT 'Datos insertados correctamente'
+END
+
+
+/* Procedimiento Insercion */
+-----------------------------
+
+CREATE PROCEDURE InsertarPuestoEmpleado
+  @Id_Puesto INT,
+  @Puesto NVARCHAR(50)
+AS
+BEGIN
+  -- Verificar si el Id_Puesto ya existe
+  IF EXISTS(SELECT 1 FROM PuestoEmpleado WHERE Id_Puesto = @Id_Puesto)
+  BEGIN
+    PRINT 'Puesto ya existe'
+    RETURN
+  END
+
+  -- Verificar que el Id_Puesto no esté vacío
+  IF @Id_Puesto IS NULL
+  BEGIN
+    PRINT 'El Id_Puesto no puede quedar vacío';
+    RETURN
+  END
+
+  -- Verificar que el Puesto no esté vacío
+  IF @Puesto = ''
+  BEGIN
+    PRINT 'El Puesto no puede quedar vacío'
+    RETURN;
+  END;
+
+  -- Insertar los datos
+  INSERT INTO PuestoEmpleado (Id_Puesto, Puesto)
+  VALUES (@Id_Puesto, @Puesto);
 
   PRINT 'Datos insertados correctamente'
 END
