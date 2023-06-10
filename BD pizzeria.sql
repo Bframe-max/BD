@@ -162,9 +162,23 @@ create table Municipios (
   foreign key (Id_Departamento) references Departamentos(Id_Departamento)
   )
   
-create table Proveedores(
+CREATE TABLE Proveedores (
+  Id_Proveedor INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre NVARCHAR(50) NOT NULL,
+  Direccion NVARCHAR(100),
+  Telefono NVARCHAR(20),
+  Email NVARCHAR(50)
+)
 
-  
+CREATE TABLE Pdts_Suministrados (
+  Id_Producto INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre NVARCHAR(50) NOT NULL,
+  Precio MONEY NOT NULL,
+  Id_Proveedor INT,
+  FOREIGN KEY (Id_Proveedor) REFERENCES Proveedores(Id_Proveedor)
+)
+
+
 
 ---------------------------------
 /* Procedimiento de insercion */
@@ -713,6 +727,43 @@ BEGIN
 
   PRINT 'Inserción exitosa'
 END
+
+
+CREATE PROCEDURE In_Pdts_S (
+  @Nombre NVARCHAR(50),
+  @Precio MONEY,
+  @IdProveedor INT
+)
+AS
+BEGIN
+  -- Verificar si el proveedor existe
+  IF NOT EXISTS (SELECT * FROM Proveedores WHERE Id_Proveedor = @IdProveedor)
+  BEGIN
+    PRINT 'El proveedor no existe'
+    RETURN
+  END
+
+  -- Verificar si el nombre del producto ya existe
+  IF EXISTS (SELECT * FROM Pdts_Suministrados WHERE Nombre = @Nombre)
+  BEGIN
+    PRINT 'El nombre del producto ya está registrado'
+    RETURN
+  END
+
+  -- Verificar si el nombre del producto y el precio no están vacíos
+  IF @Nombre= '' OR @Precio= ''
+  BEGIN
+    PRINT 'Campos vacíos'
+    RETURN
+  END
+
+  -- Insertar el nuevo producto suministrado
+  INSERT INTO Pdts_Suministrados (Nombre, Precio, Id_Proveedor)
+  VALUES (@Nombre, @Precio, @IdProveedor)
+
+  PRINT 'Producto suministrado insertado correctamente'
+END
+
 
 -- Listar Empleados Activos
 create procedure LEA
