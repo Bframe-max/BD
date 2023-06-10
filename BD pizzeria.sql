@@ -711,6 +711,61 @@ BEGIN
   PRINT 'Inserción exitosa'
 END
 
+-- Listar Empleados Activos
+create procedure LEA
+as
+select * from Empleado where EstadoE=1
+
+
+-- Listar Topping Activos
+create procedure LTA
+as
+select * from Toppping where Est_Topping=1
+
+
+-- Listar Pizzas Activas
+create procedure LPZA
+as
+select * from Pizzas where EstadoP=1
+
+
+-- Listar Pedido Activos
+create procedure LPA
+as
+select * from Pedido where EstadoPedido=1
+
+
+-- Listar Clientes Inactivos
+create procedure LCI
+as
+select * from Clientes where EstadoC=0
+
+
+-- Listar Empleado Inactivos
+create procedure LEI
+as
+select * from Empleado where EstadoE=0
+
+
+-- Listar Topping Inactivos
+create procedure LTI
+as
+select * from Topping where Est_Topping=0
+
+
+-- Listar Pizzas Inactivas
+create procedure LPZI
+as
+select * from Pizzas where EstadoP=0
+
+
+-- Listar Pedido Inactivos
+create procedure LPI
+as
+select * from Pedido where EstadoPedido=0
+
+
+
 
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
