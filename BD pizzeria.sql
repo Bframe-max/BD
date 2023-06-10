@@ -112,7 +112,7 @@ CREATE TABLE Pago (
   Id_Pago INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
   Id_Pedido INT,
   ID_Cliente INT,
-  Metodo_pago NVARCHAR(20),
+  Metodo_pago NVARCHAR(20) not null,
   FOREIGN KEY (Id_Pedido) REFERENCES Pedido(Id_Pedido),
   FOREIGN KEY (ID_Cliente) REFERENCES Clientes(Id_Cliente)
 )
