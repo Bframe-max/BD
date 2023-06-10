@@ -135,6 +135,19 @@ CREATE TABLE Entrega (
   FOREIGN KEY (Id_Cliente) REFERENCES Clientes(Id_Cliente)
 )
 
+create table Departamentos (
+  Id_Departamento int identity(1,1) primary key,
+  ND nvarchar(30) not null
+  )
+
+create table Municipios (
+  Id_Municipio int identity(1,1) primary key,
+  NM nvarchar(30) not null,
+  Id_departamento int,
+  foreign key (Id_Departamento) references Departamentos(Id_Departamento)
+  )
+  
+
 
 
    
