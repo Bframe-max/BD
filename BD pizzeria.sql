@@ -546,6 +546,61 @@ BEGIN
 END
 
 
+/* Procedimiento Insercion */
+-----------------------------
+CREATE PROCEDURE InsertarDetallePedido
+  @Id_Pedido INT,
+  @Id_Pizza INT,
+  @Id_Extras INT = NULL,
+  @Id_Pago INT,
+  @Cantidad INT,
+  @PrecioUnitario MONEY,
+  @Descuento MONEY = NULL,
+  @Subtotal MONEY,
+  @CostoEnvio MONEY,
+  @Id_Municipio INT
+AS
+BEGIN
+  -- Verificar existencia de las claves foráneas
+  IF NOT EXISTS (SELECT 1 FROM Pedido WHERE Id_Pedido = @Id_Pedido)
+  BEGIN
+    PRINT 'El pedido no existe'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Pizzas WHERE Id_Pizza = @Id_Pizza)
+  BEGIN
+    PRINT 'La pizza no existe'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Pago WHERE Id_Pago = @Id_Pago)
+  BEGIN
+    PRINT 'El pago no existe'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Municipios WHERE Id_Municipio = @Id_Municipio)
+  BEGIN
+    PRINT 'El municipio no existe'
+    RETURN
+  END
+
+  -- Verificar campos no vacíos
+  IF (@PrecioUnitario= '' OR @Subtotal= '')
+  BEGIN
+    PRINT 'Campos no pueden quedar vacios'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO DetallePedido (Id_Pedido, Id_Pizza, Id_Extras, Id_Pago, Cantidad, PrecioUnitario, Descuento, Subtotal, CostoEnvio, Id_Municipio)
+  VALUES (@Id_Pedido, @Id_Pizza, @Id_Extras, @Id_Pago, @Cantidad, @PrecioUnitario, @Descuento, @Subtotal, @CostoEnvio, @Id_Municipio)
+
+  PRINT 'Inserción exitosa'
+END
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
