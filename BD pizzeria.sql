@@ -165,9 +165,12 @@ create table Municipios (
 CREATE TABLE Proveedores (
   Id_Proveedor INT IDENTITY(1,1) PRIMARY KEY,
   Nombre NVARCHAR(50) NOT NULL,
+  Cod_Prov nvarchar(8) NOT NULL UNIQUE,
   Direccion NVARCHAR(100),
   Telefono NVARCHAR(20),
-  Email NVARCHAR(50)
+  Email NVARCHAR(50),
+  Id_Municipio int,
+  foreign key (Id_Municipio) references Municipios(Id_Municipio)
 )
 
 CREATE TABLE Pdts_Suministrados (
