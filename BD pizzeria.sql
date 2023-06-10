@@ -123,6 +123,7 @@ CREATE TABLE DetallePedido (
   PrecioUnitario MONEY not null,
   Descuento MONEY,
   Subtotal MONEY,
+  CostoEnvio MONEY,
   FOREIGN KEY (Id_Pedido) REFERENCES Pedido(Id_Pedido),
   FOREIGN KEY (Id_Extras) REFERENCES Extras(Id_Extra),
   FOREIGN KEY (Id_Pago) REFERENCES Pago(Id_Pago),
