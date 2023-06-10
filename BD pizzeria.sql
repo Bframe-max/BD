@@ -394,6 +394,47 @@ END
 
 
 
+/* Procedimiento Insercion */
+---------------------------
+CREATE PROCEDURE InsertarPizza
+  @Nombre_Pizza NVARCHAR(30),
+  @precio_Pizza MONEY,
+  @slice INT,
+  @Id_Topping INT,
+  @Descripcion NVARCHAR(50)
+AS
+BEGIN
+  -- Verificar si el Nombre_Pizza ya existe
+  IF EXISTS (SELECT 1 FROM Pizzas WHERE Nombre_Pizza = @Nombre_Pizza)
+  BEGIN
+    PRINT 'Pizza ya existe'
+    RETURN
+  END
+
+  -- Verificar que los campos no estén vacíos
+  IF @Nombre_Pizza IS NULL OR @Nombre_Pizza = '' OR
+     @precio_Pizza IS NULL OR
+     @slice IS NULL OR
+     @Id_Topping IS NULL
+  BEGIN
+    PRINT 'No pueden quedar vacíos'
+    RETURN
+  END
+
+  -- Verificar si el Id_Topping existe
+  IF NOT EXISTS (SELECT 1 FROM Topping WHERE Id_Topping = @Id_Topping)
+  BEGIN
+    PRINT 'Topping no existe'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Pizzas (Nombre_Pizza, precio_Pizza, slice, Id_Topping, Descripcion)
+  VALUES (@Nombre_Pizza, @precio_Pizza, @slice, @Id_Topping, @Descripcion)
+
+  PRINT 'Datos insertados correctamente'
+END
+
 
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
