@@ -684,6 +684,33 @@ BEGIN
   PRINT 'Inserción exitosa'
 END
 
+/* Procedimiento Insercion */
+CREATE PROCEDURE InsertarMunicipio
+  @NM NVARCHAR(30),
+  @Id_Departamento INT
+AS
+BEGIN
+  -- Verificar campo no vacío
+  IF @NM= ''
+  BEGIN
+    PRINT 'El nombre del municipio no puede estar vacío'
+    RETURN
+  END
+
+  -- Verificar existencia del departamento
+  IF NOT EXISTS (SELECT 1 FROM Departamentos WHERE Id_Departamento = @Id_Departamento)
+  BEGIN
+    PRINT 'El departamento especificado no existe'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Municipios (NM, Id_Departamento)
+  VALUES (@NM, @Id_Departamento)
+
+  PRINT 'Inserción exitosa'
+END
+
 
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
