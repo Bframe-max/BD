@@ -601,6 +601,70 @@ BEGIN
 END
 
 
+/* Procedimiento Insercion */
+----------------------------
+CREATE PROCEDURE InsertarEntrega
+  @ID_Pedido INT,
+  @Estado NVARCHAR(20),
+  @FechaHoraEntrega DATETIME,
+  @Dir_Entrega NVARCHAR(50) NOT NULL,
+  @Id_Empleado INT,
+  @Id_Cliente INT,
+  @Tipo_Entrega NVARCHAR(20)
+AS
+BEGIN
+  -- Verificar existencia de las claves foráneas
+  IF @ID_Pedido=''
+  BEGIN
+    PRINT 'El ID del pedido no puede estar vacío'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Pedido WHERE Id_Pedido = @ID_Pedido)
+  BEGIN
+    PRINT 'El pedido no existe'
+    RETURN
+  END
+
+  IF @Id_Empleado=''
+  BEGIN
+    PRINT 'El ID del empleado no puede estar vacío'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Empleado WHERE Id_Empleado = @Id_Empleado)
+  BEGIN
+    PRINT 'El empleado no existe'
+    RETURN
+  END
+
+  IF @Id_Cliente=''
+  BEGIN
+    PRINT 'El ID del cliente no puede estar vacío'
+    RETURN
+  END
+
+  IF NOT EXISTS (SELECT 1 FROM Clientes WHERE Id_Cliente = @Id_Cliente)
+  BEGIN
+    PRINT 'El cliente no existe'
+    RETURN
+  END
+
+  -- Verificar campo no vacío
+  IF @Dir_Entrega=''
+  BEGIN
+    PRINT 'La dirección de entrega no puede estar vacía'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO Entrega (ID_Pedido, Estado, FechaHoraEntrega, Dir_Entrega, Id_Empleado, Id_Cliente, Tipo_Entrega)
+  VALUES (@ID_Pedido, @Estado, ISNULL(@FechaHoraEntrega, GETDATE()), @Dir_Entrega, @Id_Empleado, @Id_Cliente, @Tipo_Entrega)
+
+  PRINT 'Inserción exitosa'
+END
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
