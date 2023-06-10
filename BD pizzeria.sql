@@ -768,6 +768,32 @@ BEGIN
 END
 
 
+/* Procedimiento Insercion */
+------------------------------
+CREATE PROCEDURE In_Prov
+  @Nombre NVARCHAR(50),
+  @Cod_Prov NVARCHAR(8),
+  @Direccion NVARCHAR(100),
+  @Telefono NVARCHAR(20),
+  @Email NVARCHAR(50),
+  @Id_Municipio INT
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  IF EXISTS (SELECT 1 FROM Proveedores WHERE Cod_Prov = @Cod_Prov)
+  BEGIN
+    PRINT 'Proveedor ya está registrado.'
+    RETURN
+  END
+
+  INSERT INTO Proveedores (Nombre, Cod_Prov, Direccion, Telefono, Email, Id_Municipio)
+  VALUES (@Nombre, @Cod_Prov, @Direccion, @Telefono, @Email, @Id_Municipio)
+
+  PRINT 'Proveedor insertado correctamente.'
+END
+
+
 -- Listar Empleados Activos
 create procedure LEA
 as
