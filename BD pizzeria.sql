@@ -436,6 +436,39 @@ BEGIN
 END
 
 
+
+/* Procedimiento Insercion */
+-----------------------------
+CREATE PROCEDURE InsertarMateriaPrima
+  @Nombre VARCHAR(50),
+  @Stock INT,
+  @UnidadMedida VARCHAR(20)
+AS
+BEGIN
+  -- Verificar si el Nombre ya existe
+  IF EXISTS (SELECT 1 FROM MateriaPrima WHERE Nombre = @Nombre)
+  BEGIN
+    PRINT 'Ya registrado'
+    RETURN
+  END
+
+  -- Verificar que los campos no estén vacíos
+  IF @Nombre IS NULL OR @Nombre = '' OR
+     @Stock IS NULL OR
+     @UnidadMedida IS NULL OR @UnidadMedida = ''
+  BEGIN
+    PRINT 'No pueden quedar vacíos'
+    RETURN
+  END
+
+  -- Insertar los datos
+  INSERT INTO MateriaPrima (Nombre, Stock, UnidadMedida)
+  VALUES (@Nombre, @Stock, @UnidadMedida)
+
+  PRINT 'Datos insertados correctamente'
+END
+
+
 --------------------------------------------  
 /*Procedimientos almacenado de modificacion*/
 --------------------------------------------
