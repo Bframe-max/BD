@@ -14,6 +14,8 @@ CREATE TABLE Clientes (
   Tel_C NVARCHAR(8) CHECK (Tel_C LIKE '[78][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
   Dir_C NVARCHAR(100),
   Email NVARCHAR(100)
+  Id_Municipio int,
+  foreign key (Id_Municipio) references Municipios (Id_Municipio)
 )
 
 CREATE TABLE Empleado (
@@ -90,10 +92,15 @@ CREATE TABLE Pedido (
   Id_Pedido INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
   Num_Pedido INT,
   Fecha_Pedido DATETIME DEFAULT GETDATE() NOT NULL,
-  Id_Cliente INT,
+  Id_Cliente INT not null,
   FOREIGN KEY (Id_Cliente) REFERENCES Clientes(Id_Cliente),
-  Id_Pizza INT,
-  FOREIGN KEY (Id_Pizza) REFERENCES Pizzas(Id_Pizza)
+  Id_Pizza INT not null,
+  FOREIGN KEY (Id_Pizza) REFERENCES Pizzas(Id_Pizza),
+  Id_Departamento int not null,
+  foreign key (Id_Departamento) references Departamentos (Id_Departamento),
+  Id_Municipio int not null,
+  foreign key (Id_Municipio) references Municipios (Id_Municipio),
+  Dir_P nvarchar(100) not null
 )
 
 CREATE TABLE Pago (
@@ -108,18 +115,21 @@ CREATE TABLE Pago (
 
 CREATE TABLE DetallePedido (
   Id_DetalleP INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-  Id_Pedido INT,
-  Id_Pizza INT,
+  Id_Pedido INT not null,
+  Id_Pizza INT not null,
   Id_Extras INT,
-  Id_Pago INT,
-  Cantidad INT,
-  PrecioUnitario MONEY,
+  Id_Pago INT not null,
+  Cantidad INT not null,
+  PrecioUnitario MONEY not null,
   Descuento MONEY,
   Subtotal MONEY,
   FOREIGN KEY (Id_Pedido) REFERENCES Pedido(Id_Pedido),
   FOREIGN KEY (Id_Extras) REFERENCES Extras(Id_Extra),
   FOREIGN KEY (Id_Pago) REFERENCES Pago(Id_Pago),
   FOREIGN KEY (Id_Pizza) REFERENCES Pizzas(Id_Pizza)
+  Id_Municipio int not null,
+  foreign key (Id_Municipio) references Municipios(Id_Municipio),
+  Di
 )
 
 CREATE TABLE Entrega (
@@ -146,6 +156,11 @@ create table Municipios (
   Id_departamento int,
   foreign key (Id_Departamento) references Departamentos(Id_Departamento)
   )
+  
+  create procedure In_Toppping(
+    @Ingr_Pizza nvarchar(16),
+    
+    
   
 
 
