@@ -747,7 +747,7 @@ BEGIN
   END
 
   -- Verificar si el nombre del producto ya existe
-  IF EXISTS (SELECT * FROM Pdts_Suministrados WHERE Nombre = @Nombre)
+  IF EXISTS (SELECT * FROM Pdts_Sumin WHERE Nombre = @Nombre)
   BEGIN
     PRINT 'El nombre del producto ya está registrado'
     RETURN
@@ -761,7 +761,7 @@ BEGIN
   END
 
   -- Insertar el nuevo producto suministrado
-  INSERT INTO Pdts_Suministrados (Nombre, Precio, Id_Proveedor)
+  INSERT INTO Pdts_Sumin (Nombre, Precio, Id_Proveedor)
   VALUES (@Nombre, @Precio, @IdProveedor)
 
   PRINT 'Producto suministrado insertado correctamente'
