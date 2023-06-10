@@ -63,9 +63,12 @@ INSERT INTO Empleado_Puesto (Id_Empleado, Id_Puesto) VALUES
 (DEFAULT, 4) -- Laura Torres está en mercadeo
 
 CREATE TABLE Topping (
-  Id_Topping INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+  Id_Topping INT NOT NULL,
   Ingredientes_Pizza NVARCHAR(60) NOT NULL,
   Est_Topping INT NOT NULL DEFAULT 1
+  IDMateriaPrima INT,
+  FOREIGN KEY (IDMateriaPrima) REFERENCES MateriaPrima(IDMateriaPrima),
+  CONSTRAINT UQ_Id_Topping UNIQUE (Id_Topping)
 )
 
 CREATE TABLE Pizzas (
