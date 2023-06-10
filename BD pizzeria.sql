@@ -567,6 +567,117 @@ BEGIN
     END
 END
 
+-------------------------------------------------------
+/* procedimiento almacenado de baja */
+------------------------------------------------------
+
+
+alter table Clientes add EstadoC bit default 1
+alter table Empleado add EstadoE bit default 1
+alter table Topping add Est_Topping bit default 1
+alter table Pizzas add EstadoP bit default 1
+alter table Pedido add EstadoPedido bit default 1
+
+
+
+
+CREATE PROCEDURE BajaCliente (
+    @Id_Cliente INT
+)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Clientes WHERE Id_Cliente = @Id_Cliente)
+    BEGIN
+        UPDATE Clientes
+        SET EstadoC = 0
+        WHERE Id_Cliente = @Id_Cliente AND EstadoC = 1
+    END
+    ELSE
+    BEGIN
+        PRINT 'Cliente no encontrado'
+    END
+END
+
+CREATE PROCEDURE BajaEmpleado (
+    @Id_Empleado INT
+)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Empleado WHERE Id_Empleado = @Id_Empleado)
+    BEGIN
+        UPDATE Empleado
+        SET EstadoE = 0
+        WHERE Id_Empleado = @Id_Empleado
+    END
+    ELSE
+    BEGIN
+        PRINT 'Empleado no encontrado'
+    END
+END
+CREATE PROCEDURE BajaTopping (
+    @Id_Topping INT
+)
+AS
+BEGIN
+    -- Verificar si el Topping existe
+    IF EXISTS (SELECT 1 FROM Topping WHERE Id_Topping = @Id_Topping)
+    BEGIN
+        -- Verificar si hay Materia Prima del Ingrediente asociado al Topping
+        IF EXISTS (SELECT 1 FROM MateriaPrima WHERE Nombre = (SELECT Ingredientes_Pizza FROM Topping WHERE Id_Topping = @Id_Topping))
+        BEGIN
+            -- Dar de baja el Topping
+            UPDATE Topping
+            SET Est_Topping = 0
+            WHERE Id_Topping = @Id_Topping
+
+            -- Verificar si hay Pizzas con ese Topping
+            IF EXISTS (SELECT 1 FROM Pizzas WHERE Id_Topping = @Id_Topping)
+            BEGIN
+                -- Marcar las Pizzas con ese Topping como no disponibles
+                UPDATE Pizzas
+                SET EstadoP= 0
+                WHERE Id_Topping = @Id_Topping
+            END
+        END
+        ELSE
+        BEGIN
+            PRINT 'No hay materia prima disponible para el ingrediente del Topping'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Topping no encontrado'
+    END
+END
+
+CREATE PROCEDURE BajaPedido (
+    @Id_Pedido INT
+)
+AS
+BEGIN
+    -- Verificar si el Pedido existe
+    IF EXISTS (SELECT 1 FROM Pedido WHERE Id_Pedido = @Id_Pedido)
+    BEGIN
+        -- Verificar si el Cliente ha cancelado el Pedido
+        IF EXISTS (SELECT 1 FROM Pago WHERE Id_Pedido = @Id_Pedido AND Metodo_pago = 'Cancelado')
+        BEGIN
+            -- Actualizar el estado del Pedido a "Dado de baja" (Estado = 0)
+            UPDATE Pedido SET EstadoPedido = 0 WHERE Id_Pedido = @Id_Pedido
+
+            PRINT 'Pedido dado de baja correctamente'
+        END
+        ELSE
+        BEGIN
+            PRINT 'El pedido no puede ser dado de baja porque el cliente no lo ha cancelado'
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT 'Pedido no encontrado'
+    END
+END
+
+
 
 
    
