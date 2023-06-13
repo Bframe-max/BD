@@ -121,6 +121,7 @@ CREATE TABLE Pago (
 CREATE TABLE DetallePedido (
   Id_DetalleP INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
   Id_Pedido INT not null,
+  Fecha DATE DEFAULT GETDATE(),
   Id_Pizza INT not null,
   Id_Extras INT null,
   Id_Pago INT not null,
@@ -180,6 +181,38 @@ CREATE TABLE Pdts_Sumin (
   Id_Proveedor INT,
   FOREIGN KEY (Id_Proveedor) REFERENCES Proveedores(Id_Proveedor)
 )
+
+
+CREATE TABLE Finanzas (
+  Id_Finanza INT IDENTITY(1, 1) PRIMARY KEY,
+  Fecha DATE DEFAULT GETDATE(),
+  TotalVentas DECIMAL(10, 2)
+)
+
+
+
+
+CREATE PROCEDURE Total_V
+AS
+BEGIN
+  DECLARE @FechaActual DATE = CONVERT(DATE, GETDATE())
+
+  IF NOT EXISTS (SELECT 1 FROM Finanzas WHERE CONVERT(DATE, Fecha) = @FechaActual)
+  BEGIN
+    -- Insertar un nuevo registro en Finanzas para la fecha actual
+    INSERT INTO Finanzas (Fecha)
+    VALUES (@FechaActual)
+  END
+
+  UPDATE Finanzas
+  SET TotalVentas = (
+    SELECT SUM(Subtotal)
+    FROM DetallePedido
+    WHERE CONVERT(DATE, Fecha) = @FechaActual
+  )
+  WHERE CONVERT(DATE, Fecha) = @FechaActual
+END
+
 
 
 
